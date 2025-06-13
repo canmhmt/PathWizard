@@ -2,7 +2,7 @@ const dirTreeEl = document.getElementById('dirTree');
 const fileListEl = document.getElementById('file-list');
 
 // Başlangıç dizini (backend ile değiştirilebilir)
-const rootPath = "C:/Users/ubuntu/Desktop";
+const rootPath = "/home/can";
 
 // API çağrısı yapıp dizin içeriğini alır
 async function fetchDirContent(path) {

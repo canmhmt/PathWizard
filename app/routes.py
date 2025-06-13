@@ -1,21 +1,14 @@
 from flask import redirect, render_template, url_for, jsonify, request
-import os
+from app.app_job import general_operations, read_operations
 
 FILE_SVC_PREFIX = "/file"
 
 def routes(app):
-    @app.route(FILE_SVC_PREFIX+"/control_panel")
-    def wel():
-        return render_template("control_panel/control_panel.html")
+    @app.route(FILE_SVC_PREFIX+"/get_directory", methods=["GET"])
+    def _svc_get_directory():
+        request_path = request.args.get("path")
+        if not request_path:
+            request_path = "/home/can"
+        status, resultMessage, response_data = read_operations.get_directory_contents(request_path)
+        return general_operations.create_json_response(status, resultMessage, response_data)  
 
-    @app.route('/api/list_dir')
-    def list_dir():
-        path = request.args.get('path')
-        if not path or not os.path.exists(path):
-            return jsonify({'error': 'Invalid path'}), 400
-        try:
-            dirs = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
-            files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-            return jsonify({'directories': dirs, 'files': files})
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
