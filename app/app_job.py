@@ -12,21 +12,24 @@ class general_operations():
                     "resultMessage" : resultMessage,
                     "resultSet" : resultSet
                 })
+    
+    def get_content_metadata(content):
+        
 
 class read_operations():
     @staticmethod
     def get_directory_contents(request_path):
         path = Path(request_path)
-        filename = path.name
         contents = [] 
         for content in path.iterdir():
+            filename = content.name
+            meta = os.stat(content)
+            print(meta)
+            size, mtime = meta.st_size, meta.st_mtime
             if content.is_file():
-                contents.append({"name" : filename,"type" : "file"})
+                contents.append({"name" : filename,"type" : "file", "size": size, "mtime" : mtime})
             elif content.is_dir():
-                contents.append({"name" : filename,"type" : "dir"})
+                contents.append({"name" : filename,"type" : "dir","size": size, "mtime" : mtime})
             else:
                 pass
         return True, "Success.", contents
-
-
-
